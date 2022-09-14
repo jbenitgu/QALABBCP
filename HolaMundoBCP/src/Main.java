@@ -6,13 +6,13 @@ public class Main {
             System.out.println("#");
             if (i==i )
             {
-
+                System.out.println("Ejercicio");
             }
             else {
 
             }
 
-
+            System.out.println("Hola!!!");
         }
     }
 }
