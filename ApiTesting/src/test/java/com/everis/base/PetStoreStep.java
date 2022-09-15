@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class PetStoreStep {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PetStoreStep.class);
-    static private final String BASE_URL = "https://reqres.in/api/";
+    static private String BASE_URL = "";
 
     private static RequestSpecification requestSpec;
     private static ResponseSpecification responseSpec;
@@ -38,10 +38,12 @@ public class PetStoreStep {
     @Before
     public void init() {
 
-        LOGGER.info(" Inicializa el constructor request ");
+        LOGGER.info(" Inicializa el constructor request** ");
         requestSpec = new RequestSpecBuilder()
                 .setBaseUri(BASE_URL)
-                .build();
+                .build()
+
+        ;
 
         LOGGER.info(" Inicializa el constructor response ");
         responseSpec = new ResponseSpecBuilder()
@@ -51,7 +53,62 @@ public class PetStoreStep {
     }
 
     public void consultaMascota(String id){
-        LOGGER.info("PRobando la consulta de Mascota");
+        LOGGER.info("consultaMascota inicio");
+
+        given().
+                baseUri(BASE_URL).
+                //spec(requestSpec).
+                log().all().
+                when().
+                get("pet/" + id).
+                then().
+                //spec(responseSpec).
+                and()
+                .log().all()
+        ;
+
+        LOGGER.info("consultaMascota Fin");
+
+
+
+    }
+
+    public void setearURLBase(String url){
+        BASE_URL = url;
+    }
+
+    public void validaCodigoRespuesta(int statusCode){
+        assertThat(lastResponse().statusCode(), is(statusCode));
+    }
+
+    public void validarNombreMascota(String nombre){
+        LOGGER.info("inicio validacion de masctora");
+        assertThat(lastResponse().getBody().path("name"), equalTo(nombre));
+        LOGGER.info("fin de validacion de masctora");
+    }
+
+    public void crearMascota(String nombre, int id){
+
+        JsonObject parametros = new JsonObject();
+        parametros.addProperty("id", id);
+        parametros.addProperty("name", nombre);
+
+        bodyPost = parametros.toString();
+
+        given().
+                baseUri(BASE_URL).
+                log().all().
+                when().
+                contentType("application/json").
+                body(bodyPost).
+                /*body("{\n" +
+                                "  \"id\": "+ id + ",\n" +
+                                "  \"name\": \"\"+ nombre + \"\"\n" +
+                                "}").*/
+                post("pet").
+                then().
+                and()
+                .log().all();
     }
 
 

@@ -15,8 +15,8 @@ public class PetStoreStepDef {
 
 
     @Given("la URL del API {string}")
-    public void laURLDelAPI(String arg0) {
-        
+    public void laURLDelAPI(String url) {
+        petStore.setearURLBase(url);
     }
 
     @When("consulto la mascota de ID {string}")
@@ -24,11 +24,22 @@ public class PetStoreStepDef {
         petStore.consultaMascota(id);
     }
 
-    @Then("valido el codigo de respuesta")
-    public void validoElCodigoDeRespuesta() {
+
+    @Then("valido el codigo de respuesta {int}")
+    public void validoElCodigoDeRespuesta(int statusCode) {
+        petStore.validaCodigoRespuesta(statusCode);
     }
 
-    @And("muestro el body")
-    public void muestroElBody() {
+
+
+
+    @And("el nombre de la mascota sea {string}")
+    public void elNombreDeLaMascotaSea(String nombre) {
+        petStore.validarNombreMascota(nombre);
+    }
+
+    @When("creo la mascota de nombre {string} con el id {int}")
+    public void creoLaMascotaDeNombreConElId(String arg0, int arg1) {
+        petStore.crearMascota(arg0,arg1);
     }
 }
